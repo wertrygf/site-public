@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2024 Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    .game-container {
+      text-align: center;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 10px;
+      margin: 20px auto;
+      width: 440px;
+      height: 440px;
+      background-color: #ccc;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-color: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .info {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>2024 Game</h1>
+    <div class="board" id="board"></div>
+    <div class="info">
+      <button onclick="restartGame()">Restart</button>
+      <p>Score: <span id="score">0</span></p>
+    </div>
+  </div>
+
+  <script>
+    let board = [];
+    let score = 0;
+
+    function createBoard() {
+      board = [
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null]
+      ];
+      score = 0;
+      updateBoard();
+    }
+
+    function updateBoard() {
+      const boardElement = document.getElementById('board');
+      boardElement.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          const tileValue = board[i][j];
+          const tileElement = document.createElement('div');
+          tileElement.classList.add('tile');
+          tileElement.textContent = tileValue ? tileValue : '';
+          if (tileValue) {
+            tileElement.style.backgroundColor = getTileColor(tileValue);
+          }
+          boardElement.appendChild(tileElement);
+        }
+      }
+      document.getElementById('score').textContent = score;
+    }
+
+    function getTileColor(value) {
+      const colors = {
+        2: '#eee4da',
+        4: '#ede0c8',
+        8: '#f2b179',
+        16: '#f59563',
+        32: '#f67c5f',
+        64: '#f65e3b',
+        128: '#edcf72',
+        256: '#edcc61',
+        512: '#edc850',
+        1024: '#edc53f',
+        2048: '#edc22e',
+        2024: '#5ba5f7',
+      };
+      return colors[value] || '#3e3e3e';
+    }
+
+    function addNewTile() {
+      let emptyTiles = [];
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if (!board[i][j]) emptyTiles.push([i, j]);
+        }
+      }
+      if (emptyTiles.length === 0) return;
+      const [x, y] = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+      board[x][y] = Math.random() > 0.5 ? 2 : 4;
+      updateBoard();
+    }
+
+    function restartGame() {
+      createBoard();
+      addNewTile();
+      addNewTile();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      let moved = false;
+      if (e.key === 'ArrowUp') moved = moveUp();
+      else if (e.key === 'ArrowDown') moved = moveDown();
+      else if (e.key === 'ArrowLeft') moved = moveLeft();
+      else if (e.key === 'ArrowRight') moved = moveRight();
+
+      if (moved) {
+        addNewTile();
+      }
+    });
+
+    function moveUp() {
+      let moved = false;
+      for (let col = 0; col < 4; col++) {
+        let newCol = board.map(row => row[col]).filter(val => val);
+        newCol = combine(newCol);
+        for (let row = 0; row < 4; row++) {
+          if (board[row][col] !== newCol[row]) {
+            moved = true;
+          }
+          board[row][col] = newCol[row] || null;
+        }
+      }
+      updateBoard();
+      return moved;
+    }
+
+    function moveDown() {
+      let moved = false;
+      for (let col = 0; col < 4; col++) {
+        let newCol = board.map(row => row[col]).filter(val => val).reverse();
+        newCol = combine(newCol).reverse();
+        for (let row = 0; row < 4; row++) {
+          if (board[row][col] !== newCol[row]) {
+            moved = true;
+          }
+          board[row][col] = newCol[row] || null;
+        }
+      }
+      updateBoard();
+      return moved;
+    }
+
+    function moveLeft() {
+      let moved = false;
+      for (let row = 0; row < 4; row++) {
+        let newRow = board[row].filter(val => val);
+        newRow = combine(newRow);
+        for (let col = 0; col < 4; col++) {
+          if (board[row][col] !== newRow[col]) {
+            moved = true;
+          }
+          board[row][col] = newRow[col] || null;
+        }
+      }
+      updateBoard();
+      return moved;
+    }
+
+    function moveRight() {
+      let moved = false;
+      for (let row = 0; row < 4; row++) {
+        let newRow = board[row].filter(val => val).reverse();
+        newRow = combine(newRow).reverse();
+        for (let col = 0; col < 4; col++) {
+          if (board[row][col] !== newRow[col]) {
+            moved = true;
+          }
+          board[row][col] = newRow[col] || null;
+        }
+      }
+      updateBoard();
+      return moved;
+    }
+
+    function combine(arr) {
+      let result = [];
+      let i = 0;
+      while (i < arr.length) {
+        if (arr[i] === arr[i + 1]) {
+          result.push(arr[i] * 2);
+          score += arr[i] * 2;
+          i += 2;
+        } else {
+          result.push(arr[i]);
+          i++;
+        }
+      }
+      return result;
+    }
+
+    createBoard();
+    addNewTile();
+    addNewTile();
+  </script>
+</body>
+</html>

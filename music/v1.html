@@ -1,0 +1,427 @@
+import React, { useState } from 'react';
+import { Search, Music, ExternalLink, Play, Radio, Youtube } from 'lucide-react';
+
+const MusicPlayer = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
+  const [selectedTrack, setSelectedTrack] = useState(null);
+
+  // 各プラットフォームの公式埋め込み対応トラック
+  const musicTracks = [
+    {
+      id: 1,
+      title: 'Blinding Lights',
+      artist: 'The Weeknd',
+      genre: 'Pop',
+      platform: 'spotify',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/0VjIjW4GlUZAMYd2vXMi3b',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/blinding-lights/1499378108?i=1499378393',
+      youtubeEmbed: 'https://www.youtube.com/embed/fHI8X4OXluQ',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/850150892',
+      tidalLink: 'https://tidal.com/browse/track/124969405'
+    },
+    {
+      id: 2,
+      title: 'Levitating',
+      artist: 'Dua Lipa',
+      genre: 'Pop',
+      platform: 'spotify',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/463CkQjx2Zk1yXoBuierM9',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/levitating/1590035691?i=1590035701',
+      youtubeEmbed: 'https://www.youtube.com/embed/TUVcZfQe-Kw',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/1201995562',
+      tidalLink: 'https://tidal.com/browse/track/167239779'
+    },
+    {
+      id: 3,
+      title: 'Shape of You',
+      artist: 'Ed Sheeran',
+      genre: 'Pop',
+      platform: 'youtube',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/7qiZfU4dY1lWllzX7mPBI',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/shape-of-you/1193701079?i=1193701392',
+      youtubeEmbed: 'https://www.youtube.com/embed/JGwWNGJdvx8',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/127054180',
+      tidalLink: 'https://tidal.com/browse/track/71121869'
+    },
+    {
+      id: 4,
+      title: 'Bohemian Rhapsody',
+      artist: 'Queen',
+      genre: 'Rock',
+      platform: 'youtube',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/3z8h0TU7ReDPLIbEnYhWZb',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/bohemian-rhapsody/1440650428?i=1440650639',
+      youtubeEmbed: 'https://www.youtube.com/embed/fJ9rUzIMcZQ',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/916246',
+      tidalLink: 'https://tidal.com/browse/track/1415516'
+    },
+    {
+      id: 5,
+      title: 'Lofi Hip Hop Radio',
+      artist: 'ChilledCow',
+      genre: 'Electronic',
+      platform: 'soundcloud',
+      spotifyEmbed: null,
+      appleMusicEmbed: null,
+      youtubeEmbed: 'https://www.youtube.com/embed/jfKfPfyJRdk',
+      soundcloudEmbed: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1134753993&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
+      deezerEmbed: null
+    },
+    {
+      id: 6,
+      title: 'Chill Vibes Mix',
+      artist: 'Chill Nation',
+      genre: 'Electronic',
+      platform: 'soundcloud',
+      spotifyEmbed: null,
+      appleMusicEmbed: null,
+      youtubeEmbed: null,
+      soundcloudEmbed: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1085056219&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
+      deezerEmbed: null
+    },
+    {
+      id: 7,
+      title: 'Starboy',
+      artist: 'The Weeknd ft. Daft Punk',
+      genre: 'R&B',
+      platform: 'deezer',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/7MXVkk9YMctZqd1Srtv4MB',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/starboy/1440873296?i=1440873621',
+      youtubeEmbed: 'https://www.youtube.com/embed/34Na4j8AVgA',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/118776720',
+      tidalLink: 'https://tidal.com/browse/track/65704466'
+    },
+    {
+      id: 8,
+      title: 'Watermelon Sugar',
+      artist: 'Harry Styles',
+      genre: 'Pop',
+      platform: 'deezer',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/6UelLqGlWMcVH1E5c4H7lY',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/watermelon-sugar/1485802965?i=1485803130',
+      youtubeEmbed: 'https://www.youtube.com/embed/E07s5ZYygMg',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/889843922',
+      tidalLink: 'https://tidal.com/browse/track/130652917'
+    },
+    {
+      id: 9,
+      title: 'Bad Guy',
+      artist: 'Billie Eilish',
+      genre: 'Alternative',
+      platform: 'spotify',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/bad-guy/1450695723?i=1450695739',
+      youtubeEmbed: 'https://www.youtube.com/embed/DyDfgMOUjCI',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/656165232',
+      tidalLink: 'https://tidal.com/browse/track/107400279'
+    },
+    {
+      id: 10,
+      title: 'Someone You Loved',
+      artist: 'Lewis Capaldi',
+      genre: 'Pop',
+      platform: 'youtube',
+      spotifyEmbed: 'https://open.spotify.com/embed/track/7qEHsqek33rTcFNT9PFqLf',
+      appleMusicEmbed: 'https://embed.music.apple.com/us/album/someone-you-loved/1438854485?i=1438854487',
+      youtubeEmbed: 'https://www.youtube.com/embed/zABJeHx-trY',
+      deezerEmbed: 'https://widget.deezer.com/widget/dark/track/550916082',
+      tidalLink: 'https://tidal.com/browse/track/99544166'
+    }
+  ];
+
+  const [displayTracks, setDisplayTracks] = useState(musicTracks);
+
+  const platforms = [
+    { id: 'all', name: 'すべて', icon: '🎵', color: 'purple' },
+    { id: 'spotify', name: 'Spotify', icon: '🎵', color: 'green' },
+    { id: 'youtube', name: 'YouTube', icon: '▶️', color: 'red' },
+    { id: 'apple', name: 'Apple Music', icon: '🍎', color: 'pink' },
+    { id: 'deezer', name: 'Deezer', icon: '🎶', color: 'indigo' },
+    { id: 'soundcloud', name: 'SoundCloud', icon: '☁️', color: 'orange' }
+  ];
+
+  const handleSearch = () => {
+    let filtered = musicTracks;
+
+    if (selectedPlatform !== 'all') {
+      filtered = filtered.filter(track => track.platform === selectedPlatform);
+    }
+
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(track =>
+        track.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        track.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        track.genre.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setDisplayTracks(filtered);
+  };
+
+  const selectTrack = (track) => {
+    setSelectedTrack(track);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const getPlatformColor = (platform) => {
+    const colors = {
+      spotify: 'bg-green-600',
+      youtube: 'bg-red-600',
+      apple: 'bg-pink-600',
+      deezer: 'bg-indigo-600',
+      soundcloud: 'bg-orange-600'
+    };
+    return colors[platform] || 'bg-blue-600';
+  };
+
+  const getPlatformName = (platform) => {
+    const names = {
+      spotify: 'Spotify',
+      youtube: 'YouTube Music',
+      apple: 'Apple Music',
+      deezer: 'Deezer',
+      soundcloud: 'SoundCloud'
+    };
+    return names[platform] || 'Unknown';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        <header className="text-center mb-8">
+          <h1 className="text-4xl md:text-6xl font-bold mb-2 flex items-center justify-center gap-3">
+            <Radio className="w-10 h-10 md:w-14 md:h-14 text-purple-400" />
+            WoolTube
+          </h1>
+          <p className="text-purple-200 text-lg">究極の音楽ストリーミング統合プラットフォーム</p>
+          <p className="text-sm text-purple-300 mt-1">Spotify・YouTube・Apple Music・Deezer・SoundCloud</p>
+        </header>
+
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {platforms.map(platform => (
+              <button
+                key={platform.id}
+                onClick={() => { setSelectedPlatform(platform.id); handleSearch(); }}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  selectedPlatform === platform.id
+                    ? `bg-${platform.color}-600 shadow-lg scale-105` 
+                    : 'bg-white/10 hover:bg-white/20'
+                }`}
+              >
+                {platform.icon} {platform.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="曲名、アーティスト、ジャンルで検索..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="w-full pl-10 pr-4 py-3 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 focus:outline-none focus:border-purple-400 text-white placeholder-gray-400"
+              />
+            </div>
+            <button
+              onClick={handleSearch}
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors"
+            >
+              検索
+            </button>
+          </div>
+        </div>
+
+        {selectedTrack && (
+          <div className="mb-8 bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/20">
+            <div className="flex items-start justify-between mb-4 flex-wrap gap-2">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold">{selectedTrack.title}</h2>
+                <p className="text-purple-200 text-lg">{selectedTrack.artist}</p>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <span className={`px-3 py-1 ${getPlatformColor(selectedTrack.platform)}/50 rounded-full text-sm font-semibold`}>
+                  {getPlatformName(selectedTrack.platform)}
+                </span>
+                <span className="px-3 py-1 bg-purple-600/50 rounded-full text-sm font-semibold">
+                  {selectedTrack.genre}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {selectedTrack.spotifyEmbed && (
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-sm text-green-400 mb-2 font-semibold">🎵 Spotify</p>
+                  <iframe
+                    src={selectedTrack.spotifyEmbed}
+                    width="100%"
+                    height="152"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+
+              {selectedTrack.youtubeEmbed && (
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-sm text-red-400 mb-2 font-semibold">▶️ YouTube Music</p>
+                  <iframe
+                    width="100%"
+                    height="152"
+                    src={selectedTrack.youtubeEmbed}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+
+              {selectedTrack.appleMusicEmbed && (
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-sm text-pink-400 mb-2 font-semibold">🍎 Apple Music</p>
+                  <iframe
+                    allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+                    frameBorder="0"
+                    height="175"
+                    style={{ width: '100%', overflow: 'hidden', borderRadius: '10px' }}
+                    sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+                    src={selectedTrack.appleMusicEmbed}
+                  />
+                </div>
+              )}
+
+              {selectedTrack.deezerEmbed && (
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-sm text-indigo-400 mb-2 font-semibold">🎶 Deezer</p>
+                  <iframe
+                    title="deezer-widget"
+                    src={selectedTrack.deezerEmbed}
+                    width="100%"
+                    height="152"
+                    frameBorder="0"
+                    allowTransparency="true"
+                    allow="encrypted-media; clipboard-write"
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+
+              {selectedTrack.soundcloudEmbed && (
+                <div className="bg-black/20 p-4 rounded-lg md:col-span-2">
+                  <p className="text-sm text-orange-400 mb-2 font-semibold">☁️ SoundCloud</p>
+                  <iframe
+                    width="100%"
+                    height="166"
+                    scrolling="no"
+                    frameBorder="no"
+                    allow="autoplay"
+                    src={selectedTrack.soundcloudEmbed}
+                    className="rounded-lg"
+                  />
+                </div>
+              )}
+
+              {selectedTrack.tidalLink && (
+                <div className="bg-black/20 p-4 rounded-lg flex items-center justify-center">
+                  <a
+                    href={selectedTrack.tidalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors font-semibold"
+                  >
+                    <ExternalLink className="w-5 h-5" />
+                    🌊 TIDALで聴く
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/20">
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <Play className="w-6 h-6 text-purple-400" />
+            {searchQuery ? '検索結果' : 'おすすめトラック'}
+          </h2>
+          
+          {displayTracks.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              <Music className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p>検索結果が見つかりません</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {displayTracks.map((track) => (
+                <div
+                  key={track.id}
+                  onClick={() => selectTrack(track)}
+                  className={`p-4 rounded-lg cursor-pointer transition-all ${
+                    selectedTrack?.id === track.id
+                      ? 'bg-purple-600/50 border-2 border-purple-400 shadow-lg shadow-purple-500/20 scale-105'
+                      : 'bg-white/5 hover:bg-white/10 border-2 border-transparent hover:border-purple-400/30 hover:scale-102'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      selectedTrack?.id === track.id
+                        ? getPlatformColor(track.platform)
+                        : 'bg-white/10'
+                    }`}>
+                      <Music className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold truncate">{track.title}</h3>
+                      <p className="text-sm text-gray-300 truncate">{track.artist}</p>
+                      <div className="flex gap-1 mt-2 flex-wrap">
+                        <span className={`inline-block px-2 py-1 ${getPlatformColor(track.platform)}/30 rounded text-xs font-semibold`}>
+                          {getPlatformName(track.platform)}
+                        </span>
+                        <span className="inline-block px-2 py-1 bg-purple-600/30 rounded text-xs">
+                          {track.genre}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 text-center space-y-3">
+          <p className="text-sm text-gray-400">すべてのプラットフォームの公式埋め込みプレイヤーを使用</p>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-green-300 hover:text-green-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />Spotify
+            </a>
+            <a href="https://music.youtube.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-300 hover:text-red-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />YouTube Music
+            </a>
+            <a href="https://music.apple.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-pink-300 hover:text-pink-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />Apple Music
+            </a>
+            <a href="https://www.deezer.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />Deezer
+            </a>
+            <a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-orange-300 hover:text-orange-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />SoundCloud
+            </a>
+            <a href="https://tidal.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-200 transition-colors">
+              <ExternalLink className="w-4 h-4" />TIDAL
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MusicPlayer;

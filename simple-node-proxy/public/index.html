@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Web Proxy</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      text-align: center;
+    }
+    input {
+      width: 60%;
+      padding: 0.5em;
+    }
+    button {
+      padding: 0.5em 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Web Proxy</h1>
+  <form action="/proxy" method="get">
+    <input type="text" name="url" placeholder="https://example.com" required>
+    <button type="submit">Go</button>
+  </form>
+</body>
+</html>

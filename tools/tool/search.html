@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マルチ検索エンジン</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    input[type="text"] {
+      width: 60%;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .google { background-color: #4285F4; color: white; }
+    .duckduckgo { background-color: #DE5833; color: white; }
+    .bing { background-color: #008373; color: white; }
+    .youtube { background-color: #FF0000; color: white; }
+  </style>
+</head>
+<body>
+ 
+  <h1>🔍 検索エンジンポータル</h1>
+ 
+  <input type="text" id="query" placeholder="検索キーワードを入力">
+ 
+  <div class="buttons">
+    <button class="google" onclick="search('google')">Googleで検索</button>
+    <button class="duckduckgo" onclick="search('duckduckgo')">DuckDuckGoで検索</button>
+    <button class="bing" onclick="search('bing')">Bingで検索</button>
+    <button class="youtube" onclick="search('youtube')">YouTubeで検索</button>
+  </div>
+ 
+  <script>
+    function search(engine) {
+      const q = document.getElementById("query").value.trim();
+      if (!q) return alert("検索キーワードを入力してください");
+ 
+      let url = "";
+ 
+      switch (engine) {
+        case "google":
+          url = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+          break;
+        case "duckduckgo":
+          url = `https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
+          break;
+        case "bing":
+          url = `https://www.bing.com/search?q=${encodeURIComponent(q)}`;
+          break;
+        case "youtube":
+          url = `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+          break;
+      }
+ 
+      window.open(url, "_blank");
+    }
+  </script>
+ 
+</body>
+</html>

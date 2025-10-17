@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>くじ</title>
+</head>
+<body>
+  <p>くじ引き結果：<span id="result"></span></p>
+  <button id="startButton">くじを引く</button>
+  <script  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"  
+integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="  crossorigin="anonymous"></script>
+  <script>
+    // くじ引き結果
+    var results = [
+      // "大賞"、"1等"、"2等"、"3等"、"はずれ"
+      "大賞",
+      "1等",
+      "2等",
+      "3等",
+      "はずれ"
+    ];
+    // ボタンを押した際の動作
+    $('#startButton').on('click', function() {
+      var random = Math.floor( Math.random() * results.length );
+      var result =  results[random];
+      $('#result').html(result);
+    });
+</script>
+</body>
+</html>

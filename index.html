@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>総合学習支援ポータル</title>
+    <style>
+        /* ページ全体の背景色を黒に */
+        body {
+            background-color: #000;  /* 黒色 */
+            color: #fff;             /* テキストの色を白に */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ナビゲーションバー */
+        header {
+            background-color: #222;  /* ダークグレー */
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            background-color: #333; /* ダークグレー */
+            color: #fff;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #f39c12;  /* 明るいオレンジ色 */
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22; /* ホバー時に色変更 */
+        }
+
+        /* フッター */
+        footer {
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ログインボタン */
+        .login-button {
+            background-color: #3498db;  /* 青色 */
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .login-button:hover {
+            background-color: #2980b9; /* ホバー時の色変更 */
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーションバー -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#about">会社情報</a></li>
+                <li><a href="#services">サービス</a></li>
+                <li><a href="#contact">お問い合わせ</a></li>
+                <li><a href="/login" class="login-button">ログイン</a></li> <!-- ログインボタン -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>ようこそ、私たちのウェブサイトへ！</h1>
+            <p>最高のサービスを提供しています。</p>
+            <a href="#contact" class="cta-button">お問い合わせ</a>
+        </div>
+    </section>
+
+    <!-- 会社情報セクション -->
+    <section id="about" class="about">
+        <h2>私たちについて</h2>
+        <p>私たちは革新的なソリューションを提供する会社です。</p>
+    </section>
+
+    <!-- サービスセクション -->
+    <section id="services" class="services">
+        <h2>提供サービス</h2>
+        <div class="service-item">
+            <h3>🎮 ゲーミフィケーション学習</h3>
+            <p>算数や英語をゲームで楽しく学ぶ<br>学習を進めるごとにアバターやポイントが貯まる<br>学力に合わせて自動で難易度調整<br>保護者と競うモードや兄弟対戦モード</p>
+        </div>
+        <div class="service-item">
+            <h3>オンライン学習プラットフォーム</h3>
+            <p>学年別の学習動画（国語・算数・理科・社会など）
+<br>
+理解度チェックのクイズ
+<br>
+月額制 or 無料＋広告モデル
+  <br>
+    アニメキャラクターが先生役で登場
+    <br>
+    保護者用ダッシュボードで進捗確認可
+    </p>
+        </div>
+        <div class="service-item">
+            <h3>🌏 STEAM教育（プログラミング・科学体験）</h3>
+            <p>ScratchやPythonの入門をオンラインで学べる
+<br>
+自宅でできる科学実験キットのサブスク連携
+  <br>
+    月1回の「作品発表会」機能
+    <br>
+      講師や他の子どもと共有・コメント可能</p>
+        </div>
+    </section>
+
+    <!-- お問い合わせセクション -->
+    <section id="contact" class="contact">
+        <h2>お問い合わせ</h2>
+        <p>お気軽にご連絡ください。</p>
+        <form action="#" method="post">
+            <label for="name">お名前:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">メールアドレス:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">メッセージ:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+            <a href="/mail">送信</a>
+        </form>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <p>&copy; 2025 総合学習支援ポータル. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

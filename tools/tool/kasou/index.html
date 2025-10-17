@@ -1,0 +1,332 @@
+<!--<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>仮想マシン ターミナル</title>
+  <link rel="stylesheet" href="tools/tool/kasou/style.css" />
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀</button>
+
+  <div class="container">
+    <h1>仮想マシン ターミナル</h1>
+
+    <div class="login-screen" id="loginScreen">
+      <p>ユーザー名を入力してください:</p>
+      <input type="text" id="usernameInput" placeholder="user" />
+      <button onclick="login()">ログイン</button>
+    </div>
+
+    <div class="vm-interface" id="vmInterface" style="display: none;">
+      <div class="vm-status">
+        仮想マシン名: <span id="vmName">Ubuntu VM</span><br />
+        状態: <span id="vmState" style="color: red;">停止中</span><br />
+        ログイン中ユーザー: <span id="currentUser">-</span>
+      </div>
+
+      <div class="controls">
+        <button onclick="startVM()">起動</button>
+        <button onclick="stopVM()">停止</button>
+        <button onclick="restartVM()">再起動</button>
+      </div>
+
+      <div class="terminal" id="terminal">
+        仮想マシン ターミナルです。コマンドを入力してください。
+      </div>
+
+      <div class="input-area">
+        <span id="prompt">user@ubuntu:~$</span>
+        <input type="text" id="commandInput" placeholder="コマンドを入力" onkeydown="handleKey(event)" disabled />
+      </div>
+    </div>
+  </div>
+
+  <script src="tools/tool/kasou/filesystem.js"></script>
+  <script src="tools/tool/kasou/terminal.js"></script>
+</body>
+</html>
+-->
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>仮想マシン コンソール</title>
+  <style>
+    :root {
+      --bg-color: #1e1e1e;
+      --text-color: #c5c5c5;
+      --highlight-color: #00ff90;
+      --terminal-bg: #000;
+      --input-bg: #1e1e1e;
+      --border-color: #444;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f0f0f0;
+      --text-color: #222;
+      --highlight-color: #007700;
+      --terminal-bg: #fff;
+      --input-bg: #fff;
+      --border-color: #ccc;
+    }
+
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      color: var(--highlight-color);
+      text-align: center;
+    }
+
+    .vm-status {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+    }
+
+    .vm-status span {
+      font-weight: bold;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .controls button {
+      background-color: var(--highlight-color);
+      color: #000;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .controls button:hover {
+      opacity: 0.9;
+    }
+
+    .terminal {
+      background-color: var(--terminal-bg);
+      color: var(--text-color);
+      padding: 15px;
+      border-radius: 4px;
+      height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--border-color);
+    }
+
+    .input-area {
+      margin-top: 10px;
+      display: flex;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+
+    .input-area button {
+      background-color: var(--highlight-color);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    .input-area input:disabled,
+    .input-area button:disabled {
+      background-color: #888;
+      cursor: not-allowed;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: transparent;
+      color: var(--highlight-color);
+      border: 2px solid var(--highlight-color);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀ テーマ切替</button>
+
+  <div class="container">
+    <h1>仮想マシン コンソール</h1>
+
+    <div class="vm-status">
+      仮想マシン名：<span id="vmName">Ubuntu VM</span><br>
+      状態：<span id="vmState" style="color:red;">停止中</span>
+    </div>
+
+    <div class="controls">
+      <button onclick="startVM()">起動</button>
+      <button onclick="stopVM()">停止</button>
+      <button onclick="restartVM()">再起動</button>
+    </div>
+
+    <div class="terminal" id="terminal">
+      仮想マシン ターミナルを使用できます。コマンドを入力してください。
+    </div>
+
+    <div class="input-area">
+      <input type="text" id="commandInput" placeholder="コマンドを入力..." onkeydown="handleKey(event)" disabled>
+      <button onclick="runCommand()" id="runBtn" disabled>実行</button>
+    </div>
+  </div>
+
+<script>
+  let vmRunning = false;
+  const terminal = document.getElementById("terminal");
+  const vmState = document.getElementById("vmState");
+  const input = document.getElementById("commandInput");
+  const runBtn = document.getElementById("runBtn");
+
+  function setCommandEnabled(enabled) {
+    input.disabled = !enabled;
+    runBtn.disabled = !enabled;
+  }
+
+  function startVM() {
+    if (vmRunning) {
+      appendTerminal("VMはすでに起動しています。");
+      return;
+    }
+    vmRunning = true;
+    vmState.textContent = "稼働中";
+    vmState.style.color = "lime";
+    appendTerminal("仮想マシンを起動中...");
+    setCommandEnabled(true);
+  }
+
+  function stopVM() {
+    if (!vmRunning) {
+      appendTerminal("VMはすでに停止しています。");
+      return;
+    }
+    vmRunning = false;
+    vmState.textContent = "停止中";
+    vmState.style.color = "red";
+    appendTerminal("仮想マシンを停止しました。");
+    setCommandEnabled(false);
+  }
+
+  function restartVM() {
+    if (!vmRunning) {
+      appendTerminal("VMは停止中です。起動してから再起動してください。");
+      return;
+    }
+    appendTerminal("仮想マシンを再起動しています...");
+    setTimeout(() => {
+      appendTerminal("仮想マシンが再起動されました。");
+    }, 1000);
+  }
+
+  function runCommand() {
+    const command = input.value.trim();
+    if (!command) return;
+
+    appendTerminal(`> ${command}`);
+
+    switch (command.toLowerCase()) {
+      case "help":
+        appendTerminal("使用可能なコマンド: help, date, uname, ls, top, shutdown, df, uptime, clear");
+        break;
+      case "date":
+        appendTerminal("現在日時: " + new Date().toLocaleString());
+        break;
+      case "uname":
+        appendTerminal("Linux UbuntuVM 5.15.0-92-generic x86_64");
+        break;
+      case "ls":
+        appendTerminal("Desktop  Documents  Downloads  Music  Pictures  Videos");
+        break;
+      case "top":
+        appendTerminal("仮想プロセス:\nPID  USER   TIME  COMMAND\n1234 user  0:00  bash\n5678 user  0:01  sshd");
+        break;
+      case "shutdown":
+        appendTerminal("仮想マシンをシャットダウンします...");
+        setTimeout(() => {
+          appendTerminal("仮想マシンはシャットダウンしました。");
+          stopVM();
+        }, 2000);
+        break;
+      case "df":
+        appendTerminal("Filesystem     1K-blocks    Used Available Use% Mounted on\n/dev/sda1       10240000  2048000  8192000  25% /");
+        break;
+      case "uptime":
+        appendTerminal("システム稼働時間: 2:30:45 up 3 days,  5:23,  1 user,  load average: 0.15, 0.25, 0.31");
+        break;
+      case "clear":
+        terminal.textContent = "";
+        break;
+      default:
+        appendTerminal("コマンドが見つかりません: " + command);
+    }
+
+    input.value = "";
+  }
+
+  function appendTerminal(text) {
+    terminal.textContent += "\n" + text;
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function handleKey(e) {
+    if (e.key === "Enter") {
+      runCommand();
+    }
+  }
+
+  // テーマ切替
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme");
+    const next = current === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+  }
+
+  // 初期化（テーマ）
+  (function initTheme() {
+    const saved = localStorage.getItem("theme") || "dark";
+    document.documentElement.setAttribute("data-theme", saved);
+  })();
+</script>
+</body>
+</html>
+-->
